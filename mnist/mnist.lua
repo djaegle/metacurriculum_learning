@@ -9,11 +9,6 @@ of patent rights can be found in the PATENTS file in the same directory.
 
 torch.setdefaulttensortype('torch.FloatTensor')
 
---TODO: generalize training procedure to pairs of images for siamese 2AFC training
---TODO: given a batch, figure out which pairs of images to use for the comparison. Basically, the siamese thing only requires
--- across-image comparisons at the very end.
-   -- TODO: remove notes for Metacurriculum learning project
-
 -- TODO: Implement metacurriculum learning strategies:
    -- (1) RL algorithms using validation loss
    -- (2) simple deterministic learned robust loss: E(w(L)), with weighting function w(L,class,f(img))
@@ -70,10 +65,6 @@ local function getIterator(mode)
          else
             dataset.data = dataset.data:float()
          end
-
-         -- Duplicate labels as doubles for regression
-         -- TODO: remove for Metacurriculum learning project
-         --dataset.intlabel = torch.FloatTensor(dataset.label:size()):copy(dataset.label)
 
          -- return batches of data:
          return tnt.BatchDataset{
