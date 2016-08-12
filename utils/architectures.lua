@@ -12,6 +12,7 @@ require 'pl'
 require 'paths'
 require 'csvigo'
 local debugger = require('fb.debugger')
+local modules = require './custom-modules.lua'
 
 local function shrink(size,n)
    return math.ceil(size/(2^n))
@@ -28,6 +29,30 @@ architectures = {}
 function architectures.linearDemo(nIn,nOut)
    -- A simple one-layer linear perceptron, used in the original MNIST demo.
    return nn.Sequential():add(nn.Linear(nIn,nOut))
+end
+
+-- TODO: implement a simple WeightNet: learned weighting as a function of loss
+-- and features, no constraints for the moment.
+-- TODO: think about how to factorize it (e.g. so there's a generic shape for loss that
+-- can be modulated by feature properties).
+-- TODO: add in class-dependent weighting and priors as well.
+
+function architectures.MetaRobustTemplate(nIn, nOut, net, weightNet)
+   -- A generic template for MetaRobust network construction.
+   -- The forward pass before the MetaRobustLayer is given by net, and the functionality
+   -- specification of the weight computation (as a function of net output and the elementwise loss, e.g.)
+   -- is given by weightNet. Assumes net and weightNet are properly initialized.
+
+   model = nn.Sequential()
+   model:add(nn.ParallelTable())
+   model:add(net)
+   model:add(nn.Identity())
+   model:add(nn.JoinTable())
+   model:add(modules.MetaRobustLayer(nIn,nOut,weightNet))
+
+   -- For the moment, just try with 2 parallel branches. For general function approximation
+   -- with loss, features, and class information, will need 3 branches.
+
 end
 
 function architectures.Cir2010_4(imsize,noutputs,opt)

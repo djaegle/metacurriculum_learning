@@ -13,6 +13,10 @@ require 'paths'
 require 'csvigo'
 local debugger = require('fb.debugger')
 
+require '../ElemwiseClassNLL.lua'
+require '../ElemwiseCrossEntropy.lua'
+
+
 -- References:
 -- [1] He et al 2015, Deep Residual Learning for Image Recognition
 -- [2] He et al 2016, Identity Mappings in Deep Residual Networks
@@ -24,6 +28,15 @@ function shrink(size,n)
    return math.ceil(size/(2^n))
 end
 
+function modules.MetaRobustLayer(nIn, nOut, weightNet)
+   model = nn.Sequential()
+   model:add(nn.ParallelTable())
+   -- First channel is the ElemwiseClassNLL
+   model:add(nn.ElemwiseCrossEntropy())
+   model:add(nn.Identity())
+   model:add(nn.JoinTable())
+   model:add(weightNet)
+end
 
 function modules.ConvBlock(nInput, nOutput, stride, filterSize, padding)
     -- Default arguments
@@ -36,3 +49,5 @@ function modules.ConvBlock(nInput, nOutput, stride, filterSize, padding)
                         nInput,nOutput,filterSize,filterSize,stride,stride,padding,padding))
                 :add(standardActivation)
 end
+
+return modules
