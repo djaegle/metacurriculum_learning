@@ -48,3 +48,6 @@ print('Forward: Diff between avg of ElemwiseClassNLL and built-in should be smal
   .. test_result-true_result)
 print('Backward: Diff between avg of ElemwiseClassNLL and built-in should be small: diff: ')
 print(test_deriv-true_deriv)
+
+-- print(test_result)
+-- print(true_result)

@@ -10,7 +10,6 @@ local ElemwiseCrossEntropy, parent = torch.class('nn.ElemwiseCrossEntropy','nn.M
 -- computation of ElemwiseClassNLL, which is now done without collapsing
 -- input into a
 
-
 function ElemwiseCrossEntropy:__init()
   -- no parameters here: just need to pass forward the loss
   parent.__init(self)
