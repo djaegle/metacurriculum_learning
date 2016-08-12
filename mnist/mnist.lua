@@ -12,6 +12,7 @@ torch.setdefaulttensortype('torch.FloatTensor')
 -- TODO: Implement metacurriculum learning strategies:
    -- (1) RL algorithms using validation loss
    -- (2) simple deterministic learned robust loss: E(w(L)), with weighting function w(L,class,f(img))
+      --NB: will probably want to add regularization to push the class sampling rates to equality
    -- (2a) more sophisticated version using reparameterization trick and ensuring balanced sets
    -- Others?
 
@@ -128,6 +129,7 @@ end
 engine.hooks.onForwardCriterion = function(state)
    meter:add(state.criterion.output)
    clerr:add(state.network.output, state.sample.target)
+   debugger.enter()
    if state.training then
       print(string.format('avg. loss: %2.4f; avg. error: %2.4f',
          meter:value(), clerr:value{k = 1}))
