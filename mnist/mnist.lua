@@ -126,6 +126,7 @@ engine.hooks.onStartEpoch = function(state)
    meter:reset()
    clerr:reset()
 end
+
 engine.hooks.onForwardCriterion = function(state)
    meter:add(state.criterion.output)
    clerr:add(state.network.output, state.sample.target)
@@ -149,6 +150,10 @@ if config.usegpu then
    engine.hooks.onSample = function(state)
       igpu:resize(state.sample.input:size() ):copy(state.sample.input)
       tgpu:resize(state.sample.target:size()):copy(state.sample.target)
+
+      -- TODO: if using the MetaRobustCriterion, make input a table.
+      -- Has to be in "onSample" to get pushed into the beginning of the
+      -- architecture.
       state.sample.input  = igpu
       state.sample.target = tgpu
    end
